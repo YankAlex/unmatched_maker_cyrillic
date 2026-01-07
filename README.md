@@ -1,17 +1,31 @@
 # Unmatched Maker
 
-[Unmatched Maker](https://unmatched.cards/) is a fan site for the
-[Unmatched](https://restorationgames.com/unmatched/) family of board
-games. It features:
+[Unmatched](https://restorationgames.com/unmatched/) board game.
 
-* A [deck editor](https://unmatched.cards/decks/create)
-* A [list](https://unmatched.cards/decks) of public fan decks
-* [Unmatched database](https://unmatched.cards/umdb/) (UmDb),
-a database of all official sets, decks, and cards
-* [Game tracking](https://unmatched.cards/results) for both global and your personal results
-* Unmatched [news](https://unmatched.cards/posts/unmatched-news)
+## Project setup
+```
+npm install
+```
 
-This repository contains the code for the
-[original](https://jonathanguberman.github.io/unmatched_maker/)
-version of Unmatched Maker, but is now used solely for public issue
-tracking. The original code is still available in the commit history.
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Run your tests
+```
+npm run test
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
