@@ -3,7 +3,7 @@
         <div :class="[isMax ? 'invalid' : 'valid']">
             <span @click="updateValue(stepValue)" class="fa-layers fa-fw">
                 <i class="fa-inverse fas fa-circle"></i>
-                <i class="far fa-caret-circle-up"></i>
+                <i class="fas fa-circle-chevron-up"></i>
             </span>
 <!--            <span class="fa-layers fa-fw fa-2x">
               <i class="fa-inverse fas fa-caret-up"></i>
@@ -13,7 +13,7 @@
         <div :class="[isMin ? 'invalid' : 'valid']">
             <span @click="updateValue(-stepValue)" class="fa-layers fa-fw">
                 <i class="fa-inverse fas fa-circle"></i>
-                <i class="far fa-caret-circle-down"></i>
+                <i class="fas fa-circle-chevron-down"></i>
             </span>
         </div>
     </div>

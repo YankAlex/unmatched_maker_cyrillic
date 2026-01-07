@@ -102,7 +102,7 @@
                         </svg>
                     </div>
                     <div class="move-editor">
-                        <div class="value">
+                        <div class="value" style="padding-top: 10px">
                             {{heroMove}}
                         </div>
                         <EditorUpDownButtons

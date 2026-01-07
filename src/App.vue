@@ -617,7 +617,8 @@ export default {
 <style lang="less">
     @font-face {
         font-family: BebasNeueRegular;
-        src: url("~@/assets/fonts/BebasNeueRegular-vm3oZ.otf");
+        /*src: url("~@/assets/fonts/BebasNeueRegular-vm3oZ.otf");*/
+        src: url("~@/assets/fonts/bebasneuecyrillic.ttf");
         font-weight: normal;
         font-style: normal;
     }
