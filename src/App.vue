@@ -234,10 +234,30 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-auto">
                     <h3>Character</h3>
                     <ZoomBox :zoomFactor="zoom">
                       <UnmatchedCharacterCard
+                          :isEditable="true"
+                          :heroName.sync="deck.hero.name"
+                          :heroIsRanged.sync="deck.hero.isRanged"
+                          :heroHp.sync="deck.hero.hp"
+                          :heroMove.sync="deck.hero.move"
+                          :heroSpecialAbility.sync="deck.hero.specialAbility"
+                          :sidekickName.sync="deck.sidekick.name"
+                          :sidekickIsRanged.sync="deck.sidekick.isRanged"
+                          :sidekickHp.sync="deck.sidekick.hp"
+                          :sidekickQuantity.sync="deck.sidekick.quantity"
+                          :sidekickQuote.sync="deck.sidekick.quote"
+                      />
+                    </ZoomBox>
+                </div>
+                <div class="col-auto">
+                    <h3>Rules card</h3>
+                    <ZoomBox :zoomFactor="zoom">
+                      <UnmatchedRulesCard
                           :isEditable="true"
                           :heroName.sync="deck.hero.name"
                           :heroIsRanged.sync="deck.hero.isRanged"
@@ -354,7 +374,9 @@
                         that require them use
                         <a href="https://www.theleagueofmoveabletype.com/league-gothic" target="_blank">League Gothic Regular</a>
                         instead. Last but not least, the card descriptions are set in
-                        <a href="https://www.fontsquirrel.com/fonts/archivo-narrow" target="_blank">Archivo Narrow Regular</a>
+                        <!--<a href="https://www.fontsquirrel.com/fonts/archivo-narrow" target="_blank">Archivo Narrow Regular</a>
+                            for legibility at small sizes.-->
+                        <a href="https://fonts.google.com/specimen/Roboto+Condensed" target="_blank">Roboto Condensed</a>
                         for legibility at small sizes.
                     </p>
                 </div>
@@ -400,6 +422,7 @@
 <script>
 import UnmatchedCard from '@/components/UnmatchedCard.vue'
 import UnmatchedCharacterCard from '@/components/UnmatchedCharacterCard.vue'
+import UnmatchedRulesCard from '@/components/UnmatchedRulesCard.vue'
 import ZoomBox from '@/components/ZoomBox.vue'
 import SvgBackgroundPicker from '@/components/SvgBackgroundPicker'
 
@@ -415,6 +438,7 @@ export default {
     components: {
         UnmatchedCard,
         UnmatchedCharacterCard,
+        UnmatchedRulesCard,
         ZoomBox,
         SvgBackgroundPicker
     },
@@ -632,28 +656,28 @@ export default {
 
     @font-face {
         font-family: Archivo Narrow;
-        src: url("~@/assets/fonts/ArchivoNarrow-Regular.otf");
+        src: url("~@/assets/fonts/RobotoCondensed-Regular.ttf");
         font-weight: normal;
         font-style: normal;
     }
 
     @font-face {
         font-family: Archivo Narrow;
-        src: url("~@/assets/fonts/ArchivoNarrow-Bold.otf");
+        src: url("~@/assets/fonts/RobotoCondensed-Bold.ttf");
         font-weight: bold;
         font-style: normal;
     }
 
     @font-face {
         font-family: Archivo Narrow;
-        src: url("~@/assets/fonts/ArchivoNarrow-Italic.otf");
+        src: url("~@/assets/fonts/RobotoCondensed-Italic.ttf");
         font-weight: normal;
         font-style: italic;
     }
 
     @font-face {
         font-family: Archivo Narrow;
-        src: url("~@/assets/fonts/ArchivoNarrow-BoldItalic.otf");
+        src: url("~@/assets/fonts/RobotoCondensed-BoldItalic.ttf");
         font-weight: bold;
         font-style: italic;
     }
@@ -665,6 +689,13 @@ export default {
     @page {
         size: landscape;
     }
+    
+    /* 
+    body {
+        background-color: #111;
+        color: #eee;
+    }*/
+
 
     .printnplay {
         .unmatched-card {
@@ -749,3 +780,8 @@ export default {
       min-width: 600px;
     }
 </style>
+
+<!--<style land="scss"> 
+    $body-bg: #000;
+    $body-color: #111;
+</style>-->

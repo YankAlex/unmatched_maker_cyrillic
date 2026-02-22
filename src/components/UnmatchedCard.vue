@@ -205,6 +205,8 @@ export default {
             if (this.imageUrl) {
                 return {
                     'background-image': `url(${this.imageUrl})`,
+                    'background-position-x': 'center',
+                    'background-position-y': 'center',
                     'background-repeat': 'no-repeat',
                     'background-size': '100%',
                 }
@@ -614,7 +616,7 @@ export default {
 
     .boost-value {
         color: #FFF;
-        padding-top: 0.1mm;
+        padding-top: 0.8mm;
         position: relative;
         user-select: none;
         display: block;
