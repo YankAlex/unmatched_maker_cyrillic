@@ -491,6 +491,8 @@ export default {
         height: 29.1mm;
 
         .character-name {
+            line-height: 6mm;
+
             white-space: nowrap;
             color: #FFF;
             padding: 0;

@@ -101,15 +101,6 @@
                         <div class="col">
                           <b-card no-body>
                             <b-tabs card v-model="isJSON">
-                              <b-tab title="HUmN">
-                                <b-form-textarea
-                                  readonly
-                                  onclick="this.focus();this.select()"
-                                  style="width: 100%;
-                                  height:100px; font-family: monospace;"
-                                  :value="exampleDeckHuman"
-                                ></b-form-textarea>
-                              </b-tab>
                               <b-tab title="JSON">
                                 <b-form-textarea
                                   readonly
@@ -117,6 +108,15 @@
                                   style="width: 100%;
                                   height:100px; font-family: monospace;"
                                   :value="exampleDeckJSON"
+                                ></b-form-textarea>
+                              </b-tab>
+                              <b-tab title="HUmN">
+                                <b-form-textarea
+                                  readonly
+                                  onclick="this.focus();this.select()"
+                                  style="width: 100%;
+                                  height:100px; font-family: monospace;"
+                                  :value="exampleDeckHuman"
                                 ></b-form-textarea>
                               </b-tab>
                             </b-tabs>
@@ -254,24 +254,30 @@
                       />
                     </ZoomBox>
                 </div>
-                <div class="col-auto">
-                    <h3>Rules card</h3>
-                    <ZoomBox :zoomFactor="zoom">
-                      <UnmatchedRulesCard
-                          :isEditable="true"
-                          :heroName.sync="deck.hero.name"
-                          :heroIsRanged.sync="deck.hero.isRanged"
-                          :heroHp.sync="deck.hero.hp"
-                          :heroMove.sync="deck.hero.move"
-                          :heroSpecialAbility.sync="deck.hero.specialAbility"
-                          :sidekickName.sync="deck.sidekick.name"
-                          :sidekickIsRanged.sync="deck.sidekick.isRanged"
-                          :sidekickHp.sync="deck.sidekick.hp"
-                          :sidekickQuantity.sync="deck.sidekick.quantity"
-                          :sidekickQuote.sync="deck.sidekick.quote"
-                      />
-                    </ZoomBox>
-                </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <h3>Rules cards</h3>
+              </div>
+            </div>
+            <div class="row">
+              <div v-for="(ruleCard, id) in deck.ruleCards" class="col-auto py-3" :key="id">
+                <ZoomBox :zoomFactor="zoom">
+                <UnmatchedRulesCard
+                    :isEditable="true"
+                    :ruleName.sync="ruleCard.title"
+                    :ruleText.sync="ruleCard.content"
+                    @delete:rule="$delete(deck.ruleCards, id)"
+                />
+                </ZoomBox>
+              </div>
+              <div class="col-auto py-3">
+                <ZoomBox :zoomFactor="zoom">
+                  <div class="unmatched-card blank" @click="addRulesCard" style="cursor: pointer;">
+                    <i class="fas fa-plus-circle"></i>
+                  </div>
+                </ZoomBox>
+              </div>
             </div>
             <div class="row">
                 <div class="col">
@@ -333,21 +339,21 @@
                         <div class="col">
                           <b-card no-body>
                             <b-tabs card v-model="isJSON">
+                              <b-tab title="JSON">
+                                <b-form-textarea
+                                    :value="userDeck"
+                                    :state="isValid"
+                                    @input="parseJSONDeck"
+                                    style="width: 100%; height: 250px; font-family: monospace;"
+                                >
+                                </b-form-textarea>
+                              </b-tab>
                               <b-tab title="HUmN">
                                 <b-form-textarea
                                     :value="humanReadableDeck"
                                     :state="isValid"
                                     @input="parseHumanDeck"
                                     @keyup.esc="humanReadableDeck = serializeToHuman(deck);"
-                                    style="width: 100%; height: 250px; font-family: monospace;"
-                                >
-                                </b-form-textarea>
-                              </b-tab>
-                              <b-tab title="JSON">
-                                <b-form-textarea
-                                    :value="userDeck"
-                                    :state="isValid"
-                                    @input="parseJSONDeck"
                                     style="width: 100%; height: 250px; font-family: monospace;"
                                 >
                                 </b-form-textarea>
@@ -397,6 +403,11 @@
                 :sidekickQuote="deck.sidekick.quote"
                 :isEditable="false"
                 class="float-left"
+            />
+            <UnmatchedRulesCard v-for="(ruleCard, id) in deck.ruleCards" class="col-auto" :key="id"
+                  :ruleName.sync="ruleCard.title"
+                  :ruleText.sync="ruleCard.content"
+                  :isEditable="false"
             />
             <UnmatchedCard v-for="card in fullDeck"
                 :deckProperties="deck"
@@ -453,6 +464,8 @@ export default {
                     highlightColour: "#F07838",
                     patternName: '',
                 },
+                ruleCards: [
+                ],
                 hero: {
                     name: "Hero",
                     isRanged: false,
@@ -494,6 +507,16 @@ export default {
                 });
             });
             return fullDeck
+        },
+        fullRuleCards: function() {
+            var ruleCards = [];
+            this.deck.ruleCards.forEach((card, outerIndex) => {
+                  ruleCards.push({
+                      data: card,
+                      id: `${outerIndex}`,
+                  });
+            });
+            return ruleCards
         },
         remainingCards: function() {
             const remainingCardCount = this.fullDeck.length < 30 ? 30 - this.fullDeck.length : 0;
@@ -540,6 +563,7 @@ export default {
                 this.deck.appearance = deck.appearance
                 this.deck.hero = deck.hero
                 this.deck.sidekick = deck.sidekick
+                this.deck.ruleCards = deck.ruleCards
                 deck.cards.forEach((card, index) => {
                     this.$set(this.deck.cards, index, card);
                 })
@@ -561,6 +585,13 @@ export default {
                     afterText: "",
                     imageUrl: '',
                     quantity: 1,
+                })
+        },
+        addRulesCard: function() {
+            this.deck.ruleCards.push(
+                {
+                    title: "Extra rule",
+                    content: "This is extra rules card",
                 })
         },
         parseJSONDeck: function(value) {

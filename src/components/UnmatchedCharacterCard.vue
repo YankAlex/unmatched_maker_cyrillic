@@ -386,6 +386,18 @@ export default {
         //     opacity: 0.5;
         // }
     }
+    
+    .delete-button {
+        color: #CCC;
+        cursor: pointer;
+        position: absolute;
+        right: -6mm;
+        top: -6mm;
+        z-index: 100;
+        &:hover{
+            color: red;
+        }
+    }
 
     /deep/ .editor {
         position: absolute;
@@ -597,6 +609,7 @@ export default {
 
     .xl {
         font-size: 9mm;
+        line-height: 9mm;
         white-space: nowrap;
     }
 
