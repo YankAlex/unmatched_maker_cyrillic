@@ -207,15 +207,15 @@ export default {
     background: #000;
     color: #FFF;
 
-    /*&.rule {
+    &.rule {
         border-radius: @corner @corner 0 0;
-    }*/
+    }
 
     &.rule-text {
         height: 100%;/*40.4mm + 2*@thick-border-width;*/
         border-top: @thick-border-width solid var(--inner-border-colour);
-        border-bottom: @thick-border-width solid var(--inner-border-colour);
 
+        border-radius: 0 0 @corner @corner;
         background: var(--highlight-colour);
         background-image: var(--background-pattern);
         color: var(--contrast-colour);

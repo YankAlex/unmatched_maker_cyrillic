@@ -440,8 +440,9 @@
         font-size: 1rem;
         font-weight: 400;
         line-height: 1.5;
-        color: #495057;
-        background-color: #fff;
+        // color: #495057;
+        color: #dae7e2;
+        background-color: #212529;
         background-clip: padding-box;
         border: 1px solid #ced4da;
         border-radius: .25rem;

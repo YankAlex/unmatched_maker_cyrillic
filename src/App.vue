@@ -1,4 +1,5 @@
 <template>
+  <BApp>
     <div id="app" :style="userColours" :class="[deck.appearance.isPNP ? 'printnplay' : '']">
         <div class="no-print container">
             <div class="row py-3 justify-content-center">
@@ -99,28 +100,19 @@
                             </p>
                         </div>
                         <div class="col">
-                          <b-card no-body>
-                            <b-tabs card v-model="isJSON">
-                              <b-tab title="JSON">
-                                <b-form-textarea
+                          <BCard no-body>
+                            <BTabs card v-model:index="isJSON" id="secondBTabs">
+                              <BTab title="JSON">
+                                <BFormTextarea
                                   readonly
                                   onclick="this.focus();this.select()"
                                   style="width: 100%;
                                   height:100px; font-family: monospace;"
-                                  :value="exampleDeckJSON"
-                                ></b-form-textarea>
-                              </b-tab>
-                              <b-tab title="HUmN">
-                                <b-form-textarea
-                                  readonly
-                                  onclick="this.focus();this.select()"
-                                  style="width: 100%;
-                                  height:100px; font-family: monospace;"
-                                  :value="exampleDeckHuman"
-                                ></b-form-textarea>
-                              </b-tab>
-                            </b-tabs>
-                          </b-card>
+                                  :model-value="exampleDeckJSON"
+                                ></BFormTextarea>
+                              </BTab>
+                            </BTabs>
+                          </BCard>
                         </div>
                     </div>
                 </div>
@@ -143,9 +135,9 @@
                 <div class="col-xl-10">
                   <h2>Bugs and feature requests</h2>
                   <p>The project files for Unmatched Maker are available in the
-                    <a href="https://github.com/JonathanGuberman/unmatched_maker/" target="_blank">GitHub repo</a>.
+                    <a href="https://github.com/YankAlex/unmatched_maker_cyrillic/" target="_blank">GitHub repo</a>.
                     Please post any bugs or feature requests on the
-                    <a href="https://github.com/JonathanGuberman/unmatched_maker/issues" target=_blank>Issues</a>
+                    <a href="https://github.com/YankAlex/unmatched_maker_cyrillic/issues" target=_blank>Issues</a>
                     page there.
                   </p>
                 </div>
@@ -241,16 +233,16 @@
                     <ZoomBox :zoomFactor="zoom">
                       <UnmatchedCharacterCard
                           :isEditable="true"
-                          :heroName.sync="deck.hero.name"
-                          :heroIsRanged.sync="deck.hero.isRanged"
-                          :heroHp.sync="deck.hero.hp"
-                          :heroMove.sync="deck.hero.move"
-                          :heroSpecialAbility.sync="deck.hero.specialAbility"
-                          :sidekickName.sync="deck.sidekick.name"
-                          :sidekickIsRanged.sync="deck.sidekick.isRanged"
-                          :sidekickHp.sync="deck.sidekick.hp"
-                          :sidekickQuantity.sync="deck.sidekick.quantity"
-                          :sidekickQuote.sync="deck.sidekick.quote"
+                          v-model:heroName="deck.hero.name"
+                          v-model:heroIsRanged="deck.hero.isRanged"
+                          v-model:heroHp="deck.hero.hp"
+                          v-model:heroMove="deck.hero.move"
+                          v-model:heroSpecialAbility="deck.hero.specialAbility"
+                          v-model:sidekickName="deck.sidekick.name"
+                          v-model:sidekickIsRanged="deck.sidekick.isRanged"
+                          v-model:sidekickHp="deck.sidekick.hp"
+                          v-model:sidekickQuantity="deck.sidekick.quantity"
+                          v-model:sidekickQuote="deck.sidekick.quote"
                       />
                     </ZoomBox>
                 </div>
@@ -265,9 +257,9 @@
                 <ZoomBox :zoomFactor="zoom">
                 <UnmatchedRulesCard
                     :isEditable="true"
-                    :ruleName.sync="ruleCard.title"
-                    :ruleText.sync="ruleCard.content"
-                    @delete:rule="$delete(deck.ruleCards, id)"
+                    v-model:ruleName="ruleCard.title"
+                    v-model:ruleText="ruleCard.content"
+                    @delete:rule="deck.ruleCards.splice(id, 1)"
                 />
                 </ZoomBox>
               </div>
@@ -290,20 +282,20 @@
                         <UnmatchedCard
                             :isEditable="true"
                             :deckProperties="deck"
-                            :cardType.sync="card.data.type"
-                            :cardValue.sync="card.data.value"
-                            :cardTitle.sync="card.data.title"
-                            :characterName.sync="card.data.characterName"
-                            :boostValue.sync="card.data.boost"
-                            :basicText.sync="card.data.basicText"
-                            :immediateText.sync="card.data.immediateText"
-                            :duringText.sync="card.data.duringText"
-                            :afterText.sync="card.data.afterText"
-                            :imageUrl.sync="card.data.imageUrl"
-                            :cardQuantity.sync="card.data.quantity"
+                            v-model:cardType="card.data.type"
+                            v-model:cardValue="card.data.value"
+                            v-model:cardTitle="card.data.title"
+                            v-model:characterName="card.data.characterName"
+                            v-model:boostValue="card.data.boost"
+                            v-model:basicText="card.data.basicText"
+                            v-model:immediateText="card.data.immediateText"
+                            v-model:duringText="card.data.duringText"
+                            v-model:afterText="card.data.afterText"
+                            v-model:imageUrl="card.data.imageUrl"
+                            v-model:cardQuantity="card.data.quantity"
                             class="float-left shadow"
                             :class="{'border-danger': index >= 30}"
-                            @delete:card="$delete(deck.cards, card.origIndex)"
+                            @delete:card="deck.cards.splice(card.origIndex, 1)"
                         />
                     </ZoomBox>
                 </div>
@@ -337,29 +329,19 @@
                             </p>
                         </div>
                         <div class="col">
-                          <b-card no-body>
-                            <b-tabs card v-model="isJSON">
-                              <b-tab title="JSON">
-                                <b-form-textarea
-                                    :value="userDeck"
+                          <BCard no-body>
+                            <BTabs card v-model:index="isJSON" id="firstBTabs">
+                              <BTab title="JSON">
+                                <BFormTextarea
+                                    v-model:model-value="userDeck"
                                     :state="isValid"
                                     @input="parseJSONDeck"
                                     style="width: 100%; height: 250px; font-family: monospace;"
                                 >
-                                </b-form-textarea>
-                              </b-tab>
-                              <b-tab title="HUmN">
-                                <b-form-textarea
-                                    :value="humanReadableDeck"
-                                    :state="isValid"
-                                    @input="parseHumanDeck"
-                                    @keyup.esc="humanReadableDeck = serializeToHuman(deck);"
-                                    style="width: 100%; height: 250px; font-family: monospace;"
-                                >
-                                </b-form-textarea>
-                              </b-tab>
-                            </b-tabs>
-                          </b-card>
+                                </BFormTextarea>
+                              </BTab>
+                            </BTabs>
+                          </BCard>
                         </div>
                     </div>
                 </div>
@@ -405,8 +387,8 @@
                 class="float-left"
             />
             <UnmatchedRulesCard v-for="(ruleCard, id) in deck.ruleCards" class="col-auto" :key="id"
-                  :ruleName.sync="ruleCard.title"
-                  :ruleText.sync="ruleCard.content"
+                  v-model:ruleName="ruleCard.title"
+                  v-model:ruleText="ruleCard.content"
                   :isEditable="false"
             />
             <UnmatchedCard v-for="card in fullDeck"
@@ -428,22 +410,24 @@
             />
         </div>
     </div>
+  </BApp>
 </template>
+
+<script setup>
+import {BApp} from 'bootstrap-vue-next'
+</script>
 
 <script>
 import UnmatchedCard from '@/components/UnmatchedCard.vue'
 import UnmatchedCharacterCard from '@/components/UnmatchedCharacterCard.vue'
 import UnmatchedRulesCard from '@/components/UnmatchedRulesCard.vue'
 import ZoomBox from '@/components/ZoomBox.vue'
-import SvgBackgroundPicker from '@/components/SvgBackgroundPicker'
+import SvgBackgroundPicker from '@/components/SvgBackgroundPicker.vue'
 
 import exampleDeck from '@/mixins/exampleDeck.js'
 
 import serializeToHuman from '@/parser/serializer.js'
-
-const nearley = require('nearley')
 import grammar from '@/parser/unmatchedParser.js'
-
 export default {
     name: 'app',
     components: {
@@ -555,7 +539,7 @@ export default {
             if (urlDeck) {
               this.autoSave = false;
               const humanDeck = decodeURIComponent(urlDeck);
-              this.parseHumanDeck(humanDeck);
+              // this.parseHumanDeck(humanDeck);
               return
             } else if (localStorage.getItem('unmatched-deck')) {
                 const deck = JSON.parse(localStorage.getItem('unmatched-deck'));
@@ -565,7 +549,7 @@ export default {
                 this.deck.sidekick = deck.sidekick
                 this.deck.ruleCards = deck.ruleCards
                 deck.cards.forEach((card, index) => {
-                    this.$set(this.deck.cards, index, card);
+                    this.deck.cards[index] = card;
                 })
             }
         });
@@ -594,16 +578,18 @@ export default {
                     content: "This is extra rules card",
                 })
         },
-        parseJSONDeck: function(value) {
-            this.userDeck = value;
+        parseJSONDeck: function() {
+            let value = this.userDeck;
+            console.log(value);
             try {
-                this.deck = JSON.parse(value);
+                let deck = JSON.parse(value);
+                this.deck = deck;
                 this.isValid = true;
             } catch {
                 this.isValid = false;
             }
         },
-        parseHumanDeck: function(value) {
+/*        parseHumanDeck: function(value) {
             const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
             this.humanReadableDeck = value;
             try {
@@ -634,7 +620,7 @@ export default {
             } catch (err) {
               this.isValid = false;
             }
-        },
+        },*/
         localStorageSave: function() {
             localStorage.setItem('unmatched-deck', JSON.stringify(this.deck));
         },
@@ -673,42 +659,42 @@ export default {
     @font-face {
         font-family: BebasNeueRegular;
         /*src: url("~@/assets/fonts/BebasNeueRegular-vm3oZ.otf");*/
-        src: url("~@/assets/fonts/bebasneuecyrillic.ttf");
+        src: url("/assets/fonts/bebasneuecyrillic.ttf") format("truetype");
         font-weight: normal;
         font-style: normal;
     }
 
     @font-face {
         font-family: League Gothic;
-        src: url("~@/assets/fonts/LeagueGothic-Regular.otf");
+        src: url("/assets/fonts/LeagueGothic-Regular.otf");
         font-weight: normal;
         font-style: normal;
     }
 
     @font-face {
         font-family: Archivo Narrow;
-        src: url("~@/assets/fonts/RobotoCondensed-Regular.ttf");
+        src: url("/assets/fonts/RobotoCondensed-Regular.ttf");
         font-weight: normal;
         font-style: normal;
     }
 
     @font-face {
         font-family: Archivo Narrow;
-        src: url("~@/assets/fonts/RobotoCondensed-Bold.ttf");
+        src: url("/assets/fonts/RobotoCondensed-Bold.ttf");
         font-weight: bold;
         font-style: normal;
     }
 
     @font-face {
         font-family: Archivo Narrow;
-        src: url("~@/assets/fonts/RobotoCondensed-Italic.ttf");
+        src: url("/assets/fonts/RobotoCondensed-Italic.ttf");
         font-weight: normal;
         font-style: italic;
     }
 
     @font-face {
         font-family: Archivo Narrow;
-        src: url("~@/assets/fonts/RobotoCondensed-BoldItalic.ttf");
+        src: url("/assets/fonts/RobotoCondensed-BoldItalic.ttf");
         font-weight: bold;
         font-style: italic;
     }
@@ -780,8 +766,8 @@ export default {
 
         border-radius: 2.5mm;
         &.blank {
-            background: #EEE;
-            color: #CCC;
+            background: #333;
+            color: #111;
             display: flex;
             align-items: center;
             justify-content: center;

@@ -22,8 +22,8 @@
                             <div>Attack</div>
                         </div>
                         <div class="attack-type">
-                            <img v-if="heroIsRanged" class="ranged icon" src="~@/assets/images/ranged.svg">
-                            <img v-else class="melee icon" src="~@/assets/images/melee.svg">
+                            <img v-if="heroIsRanged" class="ranged icon" src="/assets/images/ranged.svg">
+                            <img v-else class="melee icon" src="/assets/images/melee.svg">
                             <div v-if="isEditable" class="editor" @click="$emit('update:heroIsRanged', !heroIsRanged)"></div>
                         </div>
                     </div>
@@ -147,8 +147,8 @@
                             <div>Attack</div>
                         </div>
                         <div class="attack-type" v-if="sidekickQuantity">
-                            <img v-if="sidekickIsRanged" class="ranged icon" src="~@/assets/images/ranged.svg">
-                            <img v-else class="melee icon" src="~@/assets/images/melee.svg">
+                            <img v-if="sidekickIsRanged" class="ranged icon" src="/assets/images/ranged.svg">
+                            <img v-else class="melee icon" src="/assets/images/melee.svg">
                             <div v-if="isEditable" class="editor" @click="$emit('update:sidekickIsRanged', !sidekickIsRanged)"></div>
                         </div>
                     </div>
@@ -286,8 +286,8 @@ export default {
     data: function () {
         return {
             initialWidth: undefined,
-            meleeSvg: require('@/assets/images/ranged.svg'),
-            rangedSvg: require('@/assets/images/melee.svg'),
+/*            meleeSvg: require('@/assets/images/ranged.svg'),
+            aangedSvg: require('@/assets/images/melee.svg'),*/
         }
     },
     computed: {
