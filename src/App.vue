@@ -310,6 +310,13 @@
                     </ZoomBox>
                 </div>
             </div>
+
+            <div class="row" style="justify-content: space-evenly;">
+                <div class="col-auto" v-for="type in [{name: 'versatile', color: '#6C4E8D'}, {name: 'attack', color: '#DC3034'}, {name: 'defence', color: '#2C76AC'}, {name: 'scheme', color: '#FCBD71'}]">
+                    <Bar :data="{labels: chartData.labels[type.name], datasets: [{data: chartData.values[type.name], backgroundColor: type.color, label: type.name}]}" :chartOptions="{responsive: true}"></Bar>
+                </div>
+            </div>
+
             <div class="row py-5">
                 <div class="col-12">
                     <h3 id="deck-definition">Deck definition</h3>
@@ -428,6 +435,12 @@ import exampleDeck from '@/mixins/exampleDeck.js'
 
 import serializeToHuman from '@/parser/serializer.js'
 import grammar from '@/parser/unmatchedParser.js'
+
+import { Bar } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
 export default {
     name: 'app',
     components: {
@@ -435,7 +448,8 @@ export default {
         UnmatchedCharacterCard,
         UnmatchedRulesCard,
         ZoomBox,
-        SvgBackgroundPicker
+        SvgBackgroundPicker,
+        Bar,
     },
     mixins: [exampleDeck],
     data: function () {
@@ -517,7 +531,26 @@ export default {
         },
         deckLink: function() {
           return '/?deck=' + encodeURIComponent(this.humanReadableDeck);
-        }
+        },
+        chartData: function() {
+            let values = {
+                defence: [],
+                attack: [],
+                scheme: [],
+                versatile: [],
+            };
+            let labels = {
+                defence: [],
+                attack: [],
+                scheme: [],
+                versatile: [],
+            };
+            for (let card of this.fullDeck) {
+                values[card.data.type].push(card.data.value);
+                labels[card.data.type].push("");
+            }
+            return {values, labels};
+        },
     },
     watch: {
         'deck': {
