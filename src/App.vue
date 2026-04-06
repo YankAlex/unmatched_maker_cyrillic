@@ -191,7 +191,7 @@
                                     :selectedPattern="deck.appearance.patternName"
                                     :bgColour="deck.appearance.highlightColour"
                                     @change:background="pattern=$event.backgroundImage"
-                                    @change:pattern="$set(deck.appearance, 'patternName', $event)"
+                                    @change:pattern="deck.appearance.patternName = $event"
                                   ></SvgBackgroundPicker>
                                   <small class="text-muted">
                                       Patterns by <a href="https://www.heropatterns.com/" target="_blank">Steve Schoger</a>
