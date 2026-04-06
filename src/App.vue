@@ -313,7 +313,7 @@
 
             <div class="row" style="justify-content: space-evenly;">
                 <div class="col-auto" v-for="type in [{name: 'versatile', color: '#6C4E8D'}, {name: 'attack', color: '#DC3034'}, {name: 'defence', color: '#2C76AC'}, {name: 'scheme', color: '#FCBD71'}]">
-                    <Bar :data="{labels: chartData.labels[type.name], datasets: [{data: chartData.values[type.name], backgroundColor: type.color, label: type.name}]}" :chartOptions="{responsive: true}"></Bar>
+                  <Chart type="bar" :data="{labels: chartData.labels[type.name], datasets: [{data: chartData.boost[type.name], borderColor: '#FFFFFFAA', stepped: 'middle', backgroundColor: 'white', label: 'boost', type: 'line'}, {data: chartData.values[type.name], backgroundColor: type.color, label: type.name, type: 'bar'}]}" :options="{responsive: true, scales: {y: {min: 0, max: maxCardValue + 1, stacked: true}}}"></Chart>
                 </div>
             </div>
 
@@ -436,10 +436,10 @@ import exampleDeck from '@/mixins/exampleDeck.js'
 import serializeToHuman from '@/parser/serializer.js'
 import grammar from '@/parser/unmatchedParser.js'
 
-import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import { Chart, Bar } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
 
 export default {
     name: 'app',
@@ -532,8 +532,20 @@ export default {
         deckLink: function() {
           return '/?deck=' + encodeURIComponent(this.humanReadableDeck);
         },
+        maxCardValue: function() {
+          let maxValue = 0;
+          for (let card of this.deck.cards) maxValue = Math.max(maxValue, card.value);
+          for (let card of this.deck.cards) maxValue = Math.max(maxValue, card.boost);
+          return maxValue;
+        },
         chartData: function() {
             let values = {
+                defence: [],
+                attack: [],
+                scheme: [],
+                versatile: [],
+            };
+            let boost = {
                 defence: [],
                 attack: [],
                 scheme: [],
@@ -546,10 +558,11 @@ export default {
                 versatile: [],
             };
             for (let card of this.fullDeck) {
+                boost[card.data.type].push(card.data.boost);
                 values[card.data.type].push(card.data.value);
-                labels[card.data.type].push("");
+                labels[card.data.type].push(card.data.title);
             }
-            return {values, labels};
+            return {values, boost, labels};
         },
     },
     watch: {
