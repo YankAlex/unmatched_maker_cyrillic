@@ -5,6 +5,8 @@
             <div class="row py-3 justify-content-center">
                 <div class="col-xl-10">
                     <h1>Unmatched Maker</h1>
+                    <button v-if="russian" @click="russian = false;" >To English</button>
+                    <button v-else @click="russian = true;">На русском</button>
                     <p>
                         <a href="https://restorationgames.com/unmatched/" target="_blank">Unmatched</a>
                          is a board game from <a href="https://restorationgames.com/" target="_blank">Restoration Games</a>
@@ -243,6 +245,7 @@
                           v-model:sidekickHp="deck.sidekick.hp"
                           v-model:sidekickQuantity="deck.sidekick.quantity"
                           v-model:sidekickQuote="deck.sidekick.quote"
+                          :russian
                       />
                     </ZoomBox>
                 </div>
@@ -296,6 +299,7 @@
                             class="float-left shadow"
                             :class="{'border-danger': index >= 30}"
                             @delete:card="deck.cards.splice(card.origIndex, 1)"
+                            :russian
                         />
                     </ZoomBox>
                 </div>
@@ -559,6 +563,7 @@ export default {
                 {name: 'versatile', color: '#6C4E8D'},
                 {name: 'scheme', color: '#FCBD71'},
             ],
+            russian: false,
         }
     },
     computed: {
