@@ -345,8 +345,37 @@
 
             <div class="row" style="justify-content: space-evenly;">
                 <template v-for="type in cardTypes">
-                    <div class="col-auto" v-if="type.name != 'scheme'">
-                    <Chart type="bar" :data="{labels: chartData.labels[type.name], datasets: [{data: chartData.boost[type.name], borderColor: '#FFFFFFAA', stepped: 'middle', backgroundColor: 'white', label: 'boost', type: 'line'}, {data: chartData.values[type.name], backgroundColor: type.color, label: type.name, type: 'bar'}]}" :options="{responsive: true, scales: {y: {min: 0, max: maxCardValue + 1, stacked: true}}}"></Chart>
+                    <div class="col-auto">
+                    <Chart type="bar"
+                        :data="{
+                            labels: chartData.labels[type.name],
+                            datasets: [
+                                {
+                                    data: chartData.boost[type.name],
+                                    borderColor: '#FFFFFFAA',
+                                    stepped: 'middle',
+                                    backgroundColor: 'white',
+                                    label: 'boost',
+                                    type: 'line'
+                                },
+                                {
+                                    data: type.name != 'scheme' ? chartData.values[type.name] : [],
+                                    backgroundColor: type.color,
+                                    label: type.name,
+                                    type: 'bar'
+                                }
+                            ]
+                        }"
+                        :options="{
+                            responsive: false,
+                            scales: {
+                                y: {
+                                    min: 0,
+                                    max: maxCardValue + 1,
+                                    stacked: false
+                                }
+                            }
+                        }"></Chart>
                     </div>
                 </template>
             </div>
