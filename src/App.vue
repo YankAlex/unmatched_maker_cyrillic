@@ -781,6 +781,10 @@ export default {
             transition: none !important;
         }
 
+        body {
+          background-color: white;
+        }
+
         .no-print {
             display: none !important;
         }
