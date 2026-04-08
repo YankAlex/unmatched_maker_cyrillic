@@ -91,7 +91,7 @@
                     </div>
                     <div v-else>
                         <div :class="{'empty': !immediateText}" @click="focusEditableText">
-                            <strong>Immediately:</strong>
+                            <strong>{{ russian ? `Немедленно:` : `Immediately:` }}</strong>
                             <span
                                 v-text="immediateText"
                                 :contenteditable="isEditable"
@@ -100,7 +100,7 @@
                             ></span>
                         </div>
                         <div :class="{'empty': !duringText}" @click="focusEditableText">
-                            <strong>During combat:</strong>
+                            <strong>{{ russian ? `Во время боя:` : `During combat:` }}</strong>
                             <span
                                 v-text="duringText"
                                 :contenteditable="isEditable"
@@ -109,7 +109,7 @@
                             ></span>
                         </div>
                         <div :class="{'empty': !afterText}" @click="focusEditableText">
-                            <strong>After combat:</strong>
+                            <strong>{{ russian ? `После боя:` : `After combat:` }}</strong>
                             <span
                                 v-text="afterText"
                                 :contenteditable="isEditable"
@@ -198,6 +198,10 @@ export default {
         isEditable: {
             type: Boolean,
             default: false
+        },
+        russian: {
+            type: Boolean,
+            default: false,
         }
     },
     computed: {

@@ -4,7 +4,7 @@
             <div class="hero panel">
                 <div class="name section">
                     <div class="gutter">
-                        <div>Hero</div>
+                        <div>{{ russian ? `Герой` : `Hero` }}</div>
                     </div>
                     <div class="content xl" @click="focusEditableText">
                         <span
@@ -19,7 +19,7 @@
                 <div class="attack-health section">
                     <div class="attack section">
                         <div class="gutter">
-                            <div>Attack</div>
+                            <div>{{ russian ? `Атака` : `Attack` }}</div>
                         </div>
                         <div class="attack-type">
                             <img v-if="heroIsRanged" class="ranged icon" src="/assets/images/ranged.svg">
@@ -29,7 +29,7 @@
                     </div>
                     <div class="health section">
                         <div class="gutter">
-                            <div>Start health</div>
+                            <div>{{ russian ? `Стартовое здоровье` : `Start health` }}</div>
                         </div>
                         <div>
                             <svg width="12.1mm" height="6.7mm" viewBox="0 0 12.1 6.7">
@@ -81,7 +81,7 @@
             <div class="abilities panel">
                 <div class="special section">
                     <div class="gutter">
-                        <div>Special abilities</div>
+                        <div>{{ russian ? `Способность` : `Special abilities` }}</div>
                     </div>
                     <div class="content">
                         <span
@@ -281,6 +281,9 @@ export default {
         },
         sidekickQuote: {
             type: String,
+        },
+        russian: {
+            type: Boolean,
         },
     },
     data: function () {

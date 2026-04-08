@@ -5,6 +5,8 @@
             <div class="row py-3 justify-content-center">
                 <div class="col-xl-10">
                     <h1>Unmatched Maker</h1>
+                    <button v-if="russian" @click="russian = false;" >To English</button>
+                    <button v-else @click="russian = true;">На русском</button>
                     <p>
                         <a href="https://restorationgames.com/unmatched/" target="_blank">Unmatched</a>
                          is a board game from <a href="https://restorationgames.com/" target="_blank">Restoration Games</a>
@@ -243,6 +245,7 @@
                           v-model:sidekickHp="deck.sidekick.hp"
                           v-model:sidekickQuantity="deck.sidekick.quantity"
                           v-model:sidekickQuote="deck.sidekick.quote"
+                          :russian
                       />
                     </ZoomBox>
                 </div>
@@ -296,6 +299,7 @@
                             class="float-left shadow"
                             :class="{'border-danger': index >= 30}"
                             @delete:card="deck.cards.splice(card.origIndex, 1)"
+                            :russian
                         />
                     </ZoomBox>
                 </div>
@@ -311,10 +315,73 @@
                 </div>
             </div>
 
+            <div>
+                <table>
+                    <tr>
+                        <th colspan="5">Unique Cards</th> <th colspan="5">Total Cards</th> <th colspan="4">Total Value</th>
+                    </tr>
+                    <tr>
+                        <td v-for="type in cardTypes" :style="`background-color: ${type.color};`"><UnmatchedCardIcon :cardType="type.name"/></td>
+                        <td>Total</td>
+
+                        <td v-for="type in cardTypes" :style="`background-color: ${type.color};`"><UnmatchedCardIcon :cardType="type.name"/></td>
+                        <td>Total</td>
+
+                        <template v-for="type in cardTypes">
+                        <td v-if="type.name != 'scheme'" :style="`background-color: ${type.color};`"><UnmatchedCardIcon :cardType="type.name"/></td>
+                        </template>
+                        <td>Total</td>
+                    </tr>
+                    <tr>
+                        <td v-for="type in cardTypes" :style="`background-color: ${type.color};`">{{ uniqueSum[type.name] }}</td>
+                        <td>{{ totalSums.unique }}</td>
+
+                        <td v-for="type in cardTypes" :style="`background-color: ${type.color};`">{{ cardsSum[type.name] }}</td>
+                        <td>{{ totalSums.cards }}</td>
+
+                        <template v-for="type in cardTypes">
+                        <td v-if="type.name != 'scheme'" :style="`background-color: ${type.color};`">{{ cardsValueSum[type.name] }}</td>
+                        </template>
+                        <td>{{ totalSums.cardsValue }}</td>
+                    </tr>
+                </table>
+            </div>
+
             <div class="row" style="justify-content: space-evenly;">
-                <div class="col-auto" v-for="type in [{name: 'versatile', color: '#6C4E8D'}, {name: 'attack', color: '#DC3034'}, {name: 'defence', color: '#2C76AC'}, {name: 'scheme', color: '#FCBD71'}]">
-                  <Chart type="bar" :data="{labels: chartData.labels[type.name], datasets: [{data: chartData.boost[type.name], borderColor: '#FFFFFFAA', stepped: 'middle', backgroundColor: 'white', label: 'boost', type: 'line'}, {data: chartData.values[type.name], backgroundColor: type.color, label: type.name, type: 'bar'}]}" :options="{responsive: true, scales: {y: {min: 0, max: maxCardValue + 1, stacked: true}}}"></Chart>
-                </div>
+                <template v-for="type in cardTypes">
+                    <div class="col-auto">
+                    <Chart type="bar"
+                        :data="{
+                            labels: chartData.labels[type.name],
+                            datasets: [
+                                {
+                                    data: chartData.boost[type.name],
+                                    borderColor: '#FFFFFFAA',
+                                    stepped: 'middle',
+                                    backgroundColor: 'white',
+                                    label: 'boost',
+                                    type: 'line'
+                                },
+                                {
+                                    data: type.name != 'scheme' ? chartData.values[type.name] : [],
+                                    backgroundColor: type.color,
+                                    label: type.name,
+                                    type: 'bar'
+                                }
+                            ]
+                        }"
+                        :options="{
+                            responsive: false,
+                            scales: {
+                                y: {
+                                    min: 0,
+                                    max: maxCardValue + 1,
+                                    stacked: false
+                                }
+                            }
+                        }"></Chart>
+                    </div>
+                </template>
             </div>
 
             <div class="row py-5">
@@ -438,6 +505,7 @@ import grammar from '@/parser/unmatchedParser.js'
 
 import { Chart, Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
+import UnmatchedCardIcon from './components/UnmatchedCardIcon.vue'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
 
@@ -449,6 +517,7 @@ export default {
         UnmatchedRulesCard,
         ZoomBox,
         SvgBackgroundPicker,
+        UnmatchedCardIcon,
         Bar,
     },
     mixins: [exampleDeck],
@@ -488,6 +557,13 @@ export default {
             pattern: 'none',
             isJSON: 0,
             autoSave: true,
+            cardTypes: [
+                {name: 'attack', color: '#DC3034'},
+                {name: 'defence', color: '#2C76AC'},
+                {name: 'versatile', color: '#6C4E8D'},
+                {name: 'scheme', color: '#FCBD71'},
+            ],
+            russian: false,
         }
     },
     computed: {
@@ -563,6 +639,57 @@ export default {
                 labels[card.data.type].push(card.data.title);
             }
             return {values, boost, labels};
+        },
+        uniqueSum() {
+            let res = {
+                versatile: 0,
+                attack: 0,
+                defence: 0,
+                scheme: 0,
+            };
+            for (let card of this.deck.cards) {
+                res[card.type]++;
+            }
+            return res;
+        },
+        cardsSum() {
+            let res = {
+                versatile: 0,
+                attack: 0,
+                defence: 0,
+                scheme: 0,
+            };
+            for (let card of this.fullDeck) {
+                res[card.data.type]++;
+            }
+            return res;
+        },
+        cardsValueSum() {
+            let res = {
+                versatile: 0,
+                attack: 0,
+                defence: 0,
+                scheme: 0,
+            };
+            for (let card of this.fullDeck) {
+                res[card.data.type] += card.data.value;
+            }
+            return res;
+        },
+        totalSums() {
+            let unique = 0;
+            for (let val of Object.values(this.uniqueSum)) {
+                unique += val;
+            }
+            let cards = 0;
+            for (let val of Object.values(this.cardsSum)) {
+                cards += val;
+            }
+            let cardsValue = 0;
+            for (let val of Object.values(this.cardsValueSum)) {
+                cardsValue += val;
+            }
+            return {unique, cards, cardsValue};
         },
     },
     watch: {
