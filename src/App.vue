@@ -459,6 +459,7 @@
                 :sidekickQuote="deck.sidekick.quote"
                 :isEditable="false"
                 class="float-left"
+                :russian
             />
             <UnmatchedRulesCard v-for="(ruleCard, id) in deck.ruleCards" class="col-auto" :key="id"
                   v-model:ruleName="ruleCard.title"
@@ -481,6 +482,7 @@
                 :key="card.id"
                 :isEditable="false"
                 class="float-left"
+                :russian
             />
         </div>
     </div>
@@ -702,6 +704,11 @@ export default {
                 }
             },
             deep: true
+        },
+        'russian': {
+            handler: function() {
+                localStorage.setItem('russian', this.russian);
+            }
         }
     },
     mounted: function() {
@@ -724,6 +731,9 @@ export default {
                 deck.cards.forEach((card, index) => {
                     this.deck.cards[index] = card;
                 })
+            }
+            if (localStorage.getItem('russian')) {
+                this.russian = localStorage.getItem("russian") === "true";
             }
         });
     },

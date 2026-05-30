@@ -29,7 +29,7 @@
                     </div>
                     <div class="health section">
                         <div class="gutter">
-                            <div>{{ russian ? `Стартовое здоровье` : `Start health` }}</div>
+                            <div>{{ russian ? `Жизни` : `Start health` }}</div>
                         </div>
                         <div>
                             <svg width="12.1mm" height="6.7mm" viewBox="0 0 12.1 6.7">
