@@ -2,148 +2,9 @@
   <BApp>
     <div id="app" :style="userColours" :class="[deck.appearance.isPNP ? 'printnplay' : '']">
         <div class="no-print container">
-            <div class="row py-3 justify-content-center">
-                <div class="col-xl-10">
-                    <h1>Unmatched Maker</h1>
-                    <button v-if="russian" @click="russian = false;" >To English</button>
-                    <button v-else @click="russian = true;">На русском</button>
-                    <p>
-                        <a href="https://restorationgames.com/unmatched/" target="_blank">Unmatched</a>
-                         is a board game from <a href="https://restorationgames.com/" target="_blank">Restoration Games</a>
-                        and <a href="https://mondotees.com/" target="_blank">Mondo Games</a> where players control various iconic
-                        characters in combat against each other.
-                        Each character has their own deck with a unique fighting style.
-                    </p>
-                    <p>
-                        Of course, the more heroes there are to choose from,
-                        the more fun the game becomes. So, in the hopes of facilitating
-                        a community of fan expansions, this tool allows anybody to
-                        create a deck in the style of the real game.
-                    </p>
-                    <div class="alert alert-primary">
-                      <strong>This tool is not in any way affiliated with Restoration Games
-                      or Mondo Games.</strong>
-                      The look and design of the cards is a trademark of Restoration Games, LLC
-                      and is used with permission. Decks using this design may not be used for commercial purposes.
-                    </div>
-                </div>
-            </div>
-
-            <div class="row py-3 justify-content-center">
-                <div class="col-xl-10">
-                    <h2>Editing</h2>
-                    <p>
-                        Move your mouse over the cards to see what you can edit.
-                        Anything editable will be highlighted when you mouse over it.
-                    </p>
-                    <p>
-                        Edit any text on a card by clicking on it and typing.
-                        For numbers, click on the "increase" and "decease"
-                        buttons that appear when you mouse over them.
-                    </p>
-                    <p>
-                        You can create multiple copies of a card by changing the quantity
-                        in the lower right corner. These cards remain linked;
-                        modifications to any one will affect all of them!
-                    </p>
-                </div>
-                <div class="col-xl-10">
-                    <h2>Printing</h2>
-                    <p>
-                        What you see is not quite what you get: when you print,
-                        everything except the cards will be hidden, and the cards
-                        will be next to each other to make cutting them out easier.
-                    </p>
-                    <p>
-                        To ensure correct printing, be sure to <strong>set your
-                        paper orientation to "Landscape"</strong>. You can save to a file
-                        using the "Save to PDF" option in your print dialogue.
-
-                    </p>
-                    <p>
-                        <em>Firefox users note</em>: you will need to select "Print Background Colours"
-                        and "Print Background Images" for everything to appear correctly.
-                        This is in the "Print" dialogue on Macs and in the "Page Settings"
-                        dialogue on Windows.
-                    </p>
-                </div>
-                <div class="col-xl-10">
-                    <h2>Saving and sharing</h2>
-                    <p>
-                        As you work your deck is automatically saved to your browser's local storage;
-                        if you return in the same browser on the same computer, your deck should
-                        still be there. If you want to make changes without autosaving, uncheck
-                        the "autosave" checkbox at the top of the editor.
-                    </p>
-                    <p>
-                        If you want to make more than one deck or share decks with friends,
-                        scroll to the <a href="#deck-definition">Deck definition</a> section.
-                        There you can copy and paste the code that defines your deck.
-                        You can use the handy "Human-readable UnMatched Notation" (HUmN)
-                        or the move universal JSON formats.
-                    </p>
-                    <p>
-                      You can also share you deck using this
-                      <a :href="deckLink">link</a>. The link is to a snapshot
-                      of the current state of your deck, so if you change the deck, you'll
-                      need to share a new link. Using this link will disable autosaving, so
-                      whoever you share it with won't accidentally overwrite their own deck.
-                    </p>
-                    <div class="row">
-                        <div class="col-12">
-                            <h4>Example</h4>
-                        </div>
-                        <div class="col-7">
-                            <p>
-                                Try copying this example deck and pasting it
-                                in the <a href="#deck-definition">Deck definition</a> area.
-                                As an added bonus, the cards will illustrate some of Unmatched
-                                Maker's features.
-                            </p>
-                        </div>
-                        <div class="col">
-                          <BCard no-body>
-                            <BTabs card v-model:index="isJSON" id="secondBTabs">
-                              <BTab title="JSON">
-                                <BFormTextarea
-                                  readonly
-                                  onclick="this.focus();this.select()"
-                                  style="width: 100%;
-                                  height:100px; font-family: monospace;"
-                                  :model-value="exampleDeckJSON"
-                                ></BFormTextarea>
-                              </BTab>
-                            </BTabs>
-                          </BCard>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-10">
-                  <h2>Deck design principles</h2>
-                  <p>Roman at <a href="http://www.geektopiagames.com/" target="_blank">Geektopia Games</a>
-                    has written an article describing Unmatched
-                    <a href="http://www.geektopiagames.com/games/unmatched/unmatched-deck-structure/" target="_blank">deck structure</a>.
-                    He also has other <a href="http://www.geektopiagames.com/games/unmatched/" target="_blank">Unmatched articles</a>
-                    that are extremely useful.
-                  </p>
-                  <p>
-                    The place to discuss Unmatched fan decks seems to be the
-                    BoardGameGeek Unmatched Vol. 1
-                    <a href="https://boardgamegeek.com/forum/2870415/unmatched-battle-legends-volume-one/variants" target="_blank">
-                      Variant forum
-                    </a>. Go there to share your decks or bounce your ideas around.
-                  </p>
-                </div>
-                <div class="col-xl-10">
-                  <h2>Bugs and feature requests</h2>
-                  <p>The project files for Unmatched Maker are available in the
-                    <a href="https://github.com/YankAlex/unmatched_maker_cyrillic/" target="_blank">GitHub repo</a>.
-                    Please post any bugs or feature requests on the
-                    <a href="https://github.com/YankAlex/unmatched_maker_cyrillic/issues" target=_blank>Issues</a>
-                    page there.
-                  </p>
-                </div>
-            </div>
+            <button v-if="russian" @click="russian = false;" >To English</button>
+            <button v-else @click="russian = true;">На русском</button>
+            <Chatter :russian />
             <div class="row py-3">
                 <div class="col-12">
                     <h2>Editor</h2>
@@ -508,6 +369,7 @@ import grammar from '@/parser/unmatchedParser.js'
 import { Chart, Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
 import UnmatchedCardIcon from './components/UnmatchedCardIcon.vue'
+import Chatter from './components/Chatter.vue'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
 
@@ -521,6 +383,7 @@ export default {
         SvgBackgroundPicker,
         UnmatchedCardIcon,
         Bar,
+        Chatter,
     },
     mixins: [exampleDeck],
     data: function () {
