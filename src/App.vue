@@ -501,7 +501,7 @@ export default {
             for (let card of this.fullDeck) {
                 boost[card.data.type].push(card.data.boost);
                 values[card.data.type].push(card.data.value);
-                labels[card.data.type].push(card.data.title);
+                labels[card.data.type].push(this.capitalize(card.data.title));
             }
             return {values, boost, labels};
         },
@@ -695,6 +695,9 @@ export default {
             });
             const L = 0.2126*C[0] + 0.7152*C[1] + 0.0722*C[2];
             return (L > 0.179) ? 'black' : 'white'
+        },
+        capitalize(str) {
+            return str[0].toUpperCase().concat(str.slice(1).toLowerCase());
         },
         serializeToHuman,
     }
