@@ -141,7 +141,7 @@
                         ></span>
                     </div>
                 </div>
-                <div class="attack-health section">
+                <div v-if="sidekickQuantity" class="attack-health section">
                     <div v-if="sidekickQuantity" class="attack section">
                         <div class="gutter">
                             <div>{{ russian ? 'Атака' : 'Attack' }}</div>
@@ -220,6 +220,19 @@
                     </div>
 
                 </div>
+
+                <div class="special section" v-if="sidekickQuantity == 0">
+                    <div class="content">
+                        <span
+                            v-text="sidekickQuote"
+                            :contenteditable="isEditable"
+                            style="white-space: pre-wrap;"
+                            class="mixed-case"
+                            @blur="updateEditableText('sidekickQuote', $event)"
+                        ></span>
+                    </div>
+                </div>
+
                 <div v-if="isEditable && sidekickQuantity <= 1"
                     class="editor extra-quantity"
                 >
