@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="!russian">
         <table>
             <tr>
                 <th colspan="5">Unique Cards</th> <th colspan="5">Total Cards</th> <th colspan="4">Total Value</th>
@@ -15,6 +15,38 @@
                 <td v-if="type.name != 'scheme'" :style="`background-color: ${type.color};`"><UnmatchedCardIcon :cardType="type.name"/></td>
                 </template>
                 <td>Total</td>
+            </tr>
+            <tr>
+                <td v-for="type in cardTypes" :style="`background-color: ${type.color};`">{{ uniqueSum[type.name] }}</td>
+                <td>{{ totalSums.unique }}</td>
+
+                <td v-for="type in cardTypes" :style="`background-color: ${type.color};`">{{ cardsSum[type.name] }}</td>
+                <td>{{ totalSums.cards }}</td>
+
+                <template v-for="type in cardTypes">
+                <td v-if="type.name != 'scheme'" :style="`background-color: ${type.color};`">{{ cardsValueSum[type.name] }}</td>
+                </template>
+                <td>{{ totalSums.cardsValue }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div v-else>
+        <table class="card-stats">
+            <tr>
+                <th colspan="5">Уникальные карты</th> <th colspan="5">Всего карт</th> <th colspan="4">Суммарное значение</th>
+            </tr>
+            <tr>
+                <td v-for="type in cardTypes" :style="`background-color: ${type.color};`"><UnmatchedCardIcon :cardType="type.name"/></td>
+                <td>Сумма</td>
+
+                <td v-for="type in cardTypes" :style="`background-color: ${type.color};`"><UnmatchedCardIcon :cardType="type.name"/></td>
+                <td>Сумма</td>
+
+                <template v-for="type in cardTypes">
+                <td v-if="type.name != 'scheme'" :style="`background-color: ${type.color};`"><UnmatchedCardIcon :cardType="type.name"/></td>
+                </template>
+                <td>Сумма</td>
             </tr>
             <tr>
                 <td v-for="type in cardTypes" :style="`background-color: ${type.color};`">{{ uniqueSum[type.name] }}</td>
@@ -81,7 +113,7 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale,
 export default defineComponent({
     name: "ChartView",
     components: {UnmatchedCardIcon, Bar, Chart},
-    props: ['deck', 'fullDeck'],
+    props: ['deck', 'fullDeck', 'russian'],
     data() {
         return {
             cardTypes: [
@@ -184,3 +216,14 @@ export default defineComponent({
     }
 });
 </script>
+
+<style scoped>
+.card-stats {
+    th {
+        border-bottom: 2px solid white;
+    }
+    th:not(:last-child), td:nth-child(5n) {
+        border-right: 2px solid white;
+    }
+}
+</style>

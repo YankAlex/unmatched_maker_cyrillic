@@ -129,7 +129,7 @@
             <div class="sidekick panel">
                 <div v-if="sidekickQuantity" class="name section">
                     <div class="gutter">
-                        <div>Sidekick</div>
+                        <div>{{ russian ? 'Помощник' : 'Sidekick' }}</div>
                     </div>
                     <div class="content xl" @click="focusEditableText">
                         <span
@@ -144,7 +144,7 @@
                 <div class="attack-health section">
                     <div v-if="sidekickQuantity" class="attack section">
                         <div class="gutter">
-                            <div>Attack</div>
+                            <div>{{ russian ? 'Атака' : 'Attack' }}</div>
                         </div>
                         <div class="attack-type" v-if="sidekickQuantity">
                             <img v-if="sidekickIsRanged" class="ranged icon" src="/assets/images/ranged.svg">
@@ -154,7 +154,7 @@
                     </div>
                     <div v-if="sidekickQuantity" class="health section">
                         <div class="gutter">
-                            <div>Start health</div>
+                            <div>{{ russian ? 'Жизни' : 'Start health' }}</div>
                         </div>
                         <div v-if="sidekickQuantity===1">
                             <svg width="12.1mm" height="6.7mm" viewBox="0 0 12.1 6.7">

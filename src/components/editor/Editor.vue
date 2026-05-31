@@ -2,23 +2,23 @@
     <div class="no-print container">
         <div class="row py-3">
             <div class="col-12">
-                <h2>Editor</h2>
+                <h2>{{ russian ? 'Редактор' : 'Editor' }}</h2>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" v-model="autoSave" id="autosave">
                     <label class="form-check-label" for="autosave">
-                    Automatically save changes
+                    {{russian ? 'Автоматически сохранять изменения' : 'Automatically save changes' }}
                     </label>
                 </div>
             </div>
             <div class="col deck-properties">
-                <h3>Appearance</h3>
+                <h3>{{ russian ? 'Внешний вид' : 'Appearance' }}</h3>
                 <div class="form-group">
-                    <label for="zoomControl">Zoom</label>
+                    <label for="zoomControl">{{ russian ? 'Масштаб' : 'Zoom' }}</label>
                     <input type="range" class="form-control-range" id="zoomControl" min="1" max="2" step="any" v-model.number="zoom">
-                    <small class="text-muted">Does not affect print size</small>
+                    <small class="text-muted">{{ russian ? 'Не влияет на размер печати' : 'Does not affect print size' }}</small>
                 </div>
                 <div class="form-group">
-                    Card font size: <input v-model="cardTextSize" style="width: 3em" /> mm
+                    {{russian ? 'Размер шрифта на карте' : 'Card font size:'}} <input v-model="cardTextSize" style="width: 3em" /> {{ russian ? 'мм' : 'mm'}}
                 </div>
                 <div class="card-deck appearance">
                     <div class="card"
@@ -26,16 +26,20 @@
                         @click="deck.appearance.isPNP = false"
                     >
                         <h5 class="card-header">
-                            Production
+                            {{ russian ? 'Промышленный' : 'Production' }}
                         </h5>
                         <div class="card-body">
-                            <p class="card-text">
+                            <p class="card-text" v-if="!russian">
                                 As close as possible to the real thing without having
                                 <a href="https://oliverbarrett.com/" target="_blank">Oliver Barrett</a> do the art for you.
                             </p>
+                            <p class="card-text" v-else>
+                                Близко к оригинальному дизайну настолько, насколько это возможно.
+                                За исключением того, что <a href="https://oliverbarrett.com/" target="_blank">Оливер Барретт</a> не рисует для Вас.
+                            </p>
                             <div class="form-group">
                                 <label>
-                                    Highlight colour
+                                    {{ russian ? 'Цвет выделения' : 'Highlight colour' }}
                                 </label>
                                 <input
                                     v-model="deck.appearance.highlightColour"
@@ -46,7 +50,7 @@
                             </div>
                             <div class="form-group">
                                 <label>
-                                Background pattern
+                                {{ russian ? 'Шаблон фона' : 'Background pattern' }}
                                 </label>
                                 <SvgBackgroundPicker
                                 :selectedPattern="deck.appearance.patternName"
@@ -65,16 +69,20 @@
                         @click="deck.appearance.isPNP = true"
                     >
                         <h5 class="card-header">
-                            Print and play
+                            {{ russian ? 'Напечатать и играть' : 'Print and play' }}
                         </h5>
                         <div class="card-body">
-                            <p class="card-text">
+                            <p class="card-text" v-if="!russian">
                                 Something a little simpler, but still great looking,
                                 for saving ink when printing DIY cards.
                             </p>
+                            <p v-else>
+                                Кое-что попроще, но всё ещё хорошо выглядещее,
+                                чтобы сэкономить чернила при печати.
+                            </p>
                             <p>
                                 <label>
-                                    Border colour
+                                    {{ russian ? 'Цвет рамки' : 'Border colour' }}
                                 </label>
                                 <input
                                     v-model="deck.appearance.borderColour"
@@ -91,7 +99,7 @@
 
         <div class="row">
             <div class="col-auto">
-                <h3>Character</h3>
+                <h3>{{ russian ? 'Персонаж' : 'Character' }}</h3>
                 <ZoomBox :zoomFactor="zoom">
                     <UnmatchedCharacterCard
                         :isEditable="true"
@@ -112,7 +120,7 @@
         </div>
         <div class="row">
             <div class="col">
-            <h3>Rules cards</h3>
+            <h3>{{ russian ? 'Карты правил' : 'Rules cards' }}</h3>
             </div>
         </div>
         <div class="row">
@@ -136,7 +144,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <h3>Deck</h3>
+                <h3>{{ russian ? 'Колода' : 'Deck' }}</h3>
             </div>
         </div>
         <div class="row">
@@ -177,9 +185,9 @@
             </div>
         </div>
 
-        <ChartView :deck :fullDeck />
+        <ChartView :deck :fullDeck :russian />
 
-        <DeckDefinition @deckUpdate="(v) => {deck = v;}" :deck :deckLink />
+        <DeckDefinition @deckUpdate="(v) => {deck = v;}" :deck :deckLink :russian />
     </div>
 
     <Print :deck :fullDeck :russian :textSize="cardTextSize + 'mm'" :capitalTextSize="Number(cardTextSize) * 1.2 + 'mm'" />

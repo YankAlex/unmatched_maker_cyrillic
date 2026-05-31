@@ -1,9 +1,9 @@
 <template>
     <div class="row py-5">
         <div class="col-12">
-            <h3 id="deck-definition">Deck definition</h3>
+            <h3 id="deck-definition">{{ russian ? 'Определение колоды' : 'Deck definition' }}</h3>
             <div class="row">
-                <div class="col">
+                <div class="col" v-if="!russian">
                     <p>
                         This is the code that defines your deck. You can copy and paste this
                         code to share or save your deck. You can also edit it live (which is
@@ -15,6 +15,19 @@
                         of the current state of your deck, so if you change the deck, you'll
                         need to share a new link. Using this link will disable autosaving, so
                         whoever you share it with won't accidentally overwrite their own deck.
+                    </p>
+                </div>
+                <div class="col" v-else>
+                    <p>
+                        Это код, определяющий Вашу колоду. Вы можете копировать и вставлять его,
+                        чтобы поделиться или сохранить Вашу колоду. Вы также можете редактировать его в этом поле 
+                        (но эта опция забагована, поэтому используйте её на свой страх и риск!)
+                    </p>
+                    <p>
+                        Вы можете поделиться своей колодой с помощью этой
+                        <a :href="deckLink">ссылки</a>. Ссылка содержит текущее состояние колоды, поэтому, если Вы измените колоду,
+                        Вам потребуется поделиться новой ссылкой. Использование этой ссылки выключит автосохранение, чтобы
+                        тот, кто воспользуется ей, случайно не потерял свою колоду.
                     </p>
                 </div>
                 <div class="col">
@@ -36,7 +49,7 @@
         </div>
     </div>
     <hr />
-    <div class="row py-3 justify-content-center">
+    <div class="row py-3 justify-content-center" v-if="!russian">
         <div class="col-10">
             <h5>A Note on the Type</h5>
             <p>
@@ -58,6 +71,28 @@
             </p>
         </div>
     </div>
+    <div class="row py-3 justify-content-center" v-else>
+        <div class="col-10">
+            <h5>Замечание</h5>
+            <p>
+                Оригинальные карты Unmathced используют шрифт 
+                <a href="https://www.typography.com/fonts/knockout/overview" target="_blank">Knockout</a> от Hoefler&Co.
+                Unmatched Maker использует бесплатные альтернативы.
+            </p>
+            <p>
+                Заголовки используют шрифт
+                <a href="https://www.fontsquirrel.com/fonts/bebas-neue" target="_blank">Bebas Neue Regular</a>.
+                К сожалению, его бесплатная версия не содержит строчных букв, поэтому там, где они нужны,
+                используется шрифт
+                <a href="https://www.theleagueofmoveabletype.com/league-gothic" target="_blank">League Gothic Regular</a>
+                . Описания карт используют шрифт
+                <!--<a href="https://www.fontsquirrel.com/fonts/archivo-narrow" target="_blank">Archivo Narrow Regular</a>
+                    for legibility at small sizes.-->
+                <a href="https://fonts.google.com/specimen/Roboto+Condensed" target="_blank">Roboto Condensed</a>
+                для читабельности при маленьком размере.
+            </p>
+        </div>
+    </div>
 </template>
 
 <script lang="js">
@@ -66,7 +101,7 @@ import { defineComponent } from 'vue';
 export default defineComponent({
     name: "DeckDefinition",
     emits: ['deckUpdate'],
-    props: ['deck', 'deckLink'],
+    props: ['deck', 'deckLink', 'russian'],
     data() {
         return {
             isValid: true,
