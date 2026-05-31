@@ -17,6 +17,9 @@
                     <input type="range" class="form-control-range" id="zoomControl" min="1" max="2" step="any" v-model.number="zoom">
                     <small class="text-muted">Does not affect print size</small>
                 </div>
+                <div class="form-group">
+                    Card font size: <input v-model="cardTextSize" style="width: 3em" /> mm
+                </div>
                 <div class="card-deck appearance">
                     <div class="card"
                         :class="[deck.appearance.isPNP ? 'text-muted' : 'border-primary']"
@@ -157,6 +160,8 @@
                         :class="{'border-danger': index >= 30}"
                         @delete:card="deck.cards.splice(card.origIndex, 1)"
                         :russian
+                        :textSize="cardTextSize + 'mm'"
+                        :capitalTextSize="Number(cardTextSize) * 1.2 + 'mm'"
                     />
                 </ZoomBox>
             </div>
@@ -177,7 +182,7 @@
         <DeckDefinition @deckUpdate="(v) => {deck = v;}" :deck :deckLink />
     </div>
 
-    <Print :deck :fullDeck :russian />
+    <Print :deck :fullDeck :russian :textSize="cardTextSize + 'mm'" :capitalTextSize="Number(cardTextSize) * 1.2 + 'mm'" />
 </template>
 
 <script lang="js">
@@ -227,6 +232,7 @@ export default defineComponent({
             humanReadableDeck: '',
             autoSave: true,
             zoom: 1,
+            cardTextSize: "3.3",
         };
     },
     computed: {

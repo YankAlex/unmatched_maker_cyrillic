@@ -202,6 +202,14 @@ export default {
         russian: {
             type: Boolean,
             default: false,
+        },
+        textSize: {
+            type: String,
+            default: '3.3mm'
+        },
+        capitalTextSize: {
+            type: String,
+            default: '4mm'
         }
     },
     computed: {
@@ -672,12 +680,12 @@ export default {
             display: none;
         }
         div, span {
-            font-size: 3.3mm;
+            font-size: v-bind(textSize);
             line-height: 1.2em;
             font-family: Archivo Narrow, sans-serif;
 
             strong {
-                font-size: 4mm;
+                font-size: v-bind(capitalTextSize);
                 margin-right: 1mm;
             }
         }

@@ -37,6 +37,8 @@
             :isEditable="false"
             class="float-left"
             :russian
+            :textSize
+            :capitalTextSize
         />
     </div>
 </template>
@@ -46,6 +48,6 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
     name: "Print",
-    props: ['russian', 'deck', 'fullDeck']
+    props: ['russian', 'deck', 'fullDeck', 'textSize', 'capitalTextSize']
 })
 </script>
