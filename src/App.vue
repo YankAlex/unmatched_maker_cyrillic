@@ -1,351 +1,12 @@
 <template>
   <BApp>
-    <div id="app" :style="userColours" :class="[deck.appearance.isPNP ? 'printnplay' : '']">
+    <div id="app" :style="userColours" :class="[deck?.appearance?.isPNP ? 'printnplay' : '']">
         <div class="no-print container">
             <button v-if="russian" @click="russian = false;" >To English</button>
             <button v-else @click="russian = true;">На русском</button>
-            <Chatter :russian />
-            <div class="row py-3">
-                <div class="col-12">
-                    <h2>Editor</h2>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" v-model="autoSave" id="autosave">
-                      <label class="form-check-label" for="autosave">
-                        Automatically save changes
-                      </label>
-                    </div>
-                </div>
-                <div class="col deck-properties">
-                    <h3>Appearance</h3>
-                    <div class="form-group">
-                      <label for="zoomControl">Zoom</label>
-                      <input type="range" class="form-control-range" id="zoomControl" min="1" max="2" step="any" v-model.number="zoom">
-                      <small class="text-muted">Does not affect print size</small>
-                    </div>
-                    <div class="card-deck appearance">
-                        <div class="card"
-                            :class="[deck.appearance.isPNP ? 'text-muted' : 'border-primary']"
-                            @click="deck.appearance.isPNP = false"
-                        >
-                            <h5 class="card-header">
-                                Production
-                            </h5>
-                            <div class="card-body">
-                                <p class="card-text">
-                                    As close as possible to the real thing without having
-                                    <a href="https://oliverbarrett.com/" target="_blank">Oliver Barrett</a> do the art for you.
-                                </p>
-                                <div class="form-group">
-                                    <label>
-                                        Highlight colour
-                                    </label>
-                                    <input
-                                        v-model="deck.appearance.highlightColour"
-                                        :disabled="deck.appearance.isPNP"
-                                        class="form-control"
-                                        type="color"
-                                    >
-                                </div>
-                                <div class="form-group">
-                                  <label>
-                                    Background pattern
-                                  </label>
-                                  <SvgBackgroundPicker
-                                    :selectedPattern="deck.appearance.patternName"
-                                    :bgColour="deck.appearance.highlightColour"
-                                    @change:background="pattern=$event.backgroundImage"
-                                    @change:pattern="deck.appearance.patternName = $event"
-                                  ></SvgBackgroundPicker>
-                                  <small class="text-muted">
-                                      Patterns by <a href="https://www.heropatterns.com/" target="_blank">Steve Schoger</a>
-                                  </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card"
-                            :class="[deck.appearance.isPNP ? 'border-primary': 'text-muted']"
-                            @click="deck.appearance.isPNP = true"
-                        >
-                            <h5 class="card-header">
-                                Print and play
-                            </h5>
-                            <div class="card-body">
-                                <p class="card-text">
-                                    Something a little simpler, but still great looking,
-                                    for saving ink when printing DIY cards.
-                                </p>
-                                <p>
-                                    <label>
-                                        Border colour
-                                    </label>
-                                    <input
-                                        v-model="deck.appearance.borderColour"
-                                        :disabled="!deck.appearance.isPNP"
-                                        class="form-control"
-                                        type="color"
-                                    >
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-auto">
-                    <h3>Character</h3>
-                    <ZoomBox :zoomFactor="zoom">
-                      <UnmatchedCharacterCard
-                          :isEditable="true"
-                          v-model:heroName="deck.hero.name"
-                          v-model:heroIsRanged="deck.hero.isRanged"
-                          v-model:heroHp="deck.hero.hp"
-                          v-model:heroMove="deck.hero.move"
-                          v-model:heroSpecialAbility="deck.hero.specialAbility"
-                          v-model:sidekickName="deck.sidekick.name"
-                          v-model:sidekickIsRanged="deck.sidekick.isRanged"
-                          v-model:sidekickHp="deck.sidekick.hp"
-                          v-model:sidekickQuantity="deck.sidekick.quantity"
-                          v-model:sidekickQuote="deck.sidekick.quote"
-                          :russian
-                      />
-                    </ZoomBox>
-                </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <h3>Rules cards</h3>
-              </div>
-            </div>
-            <div class="row">
-              <div v-for="(ruleCard, id) in deck.ruleCards" class="col-auto py-3" :key="id">
-                <ZoomBox :zoomFactor="zoom">
-                <UnmatchedRulesCard
-                    :isEditable="true"
-                    v-model:ruleName="ruleCard.title"
-                    v-model:ruleText="ruleCard.content"
-                    @delete:rule="deck.ruleCards.splice(id, 1)"
-                />
-                </ZoomBox>
-              </div>
-              <div class="col-auto py-3">
-                <ZoomBox :zoomFactor="zoom">
-                  <div class="unmatched-card blank" @click="addRulesCard" style="cursor: pointer;">
-                    <i class="fas fa-plus-circle"></i>
-                  </div>
-                </ZoomBox>
-              </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <h3>Deck</h3>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-auto py-3" v-for="(card, index) in fullDeck" :key="card.id">
-                    <ZoomBox :zoomFactor="zoom">
-                        <UnmatchedCard
-                            :isEditable="true"
-                            :deckProperties="deck"
-                            v-model:cardType="card.data.type"
-                            v-model:cardValue="card.data.value"
-                            v-model:cardTitle="card.data.title"
-                            v-model:characterName="card.data.characterName"
-                            v-model:boostValue="card.data.boost"
-                            v-model:basicText="card.data.basicText"
-                            v-model:immediateText="card.data.immediateText"
-                            v-model:duringText="card.data.duringText"
-                            v-model:afterText="card.data.afterText"
-                            v-model:imageUrl="card.data.imageUrl"
-                            v-model:cardQuantity="card.data.quantity"
-                            class="float-left shadow"
-                            :class="{'border-danger': index >= 30}"
-                            @delete:card="deck.cards.splice(card.origIndex, 1)"
-                            :russian
-                        />
-                    </ZoomBox>
-                </div>
-                <div class="col-auto py-3" v-for="(_, index) in remainingCards" :key="index">
-                    <ZoomBox :zoomFactor="zoom">
-                      <div v-if="index === 0" class="unmatched-card blank" @click="add" style="cursor: pointer;">
-                          <i class="fas fa-plus-circle"></i>
-                      </div>
-                      <div v-else class="unmatched-card blank">
-                          {{index + fullDeck.length + 1}}
-                      </div>
-                    </ZoomBox>
-                </div>
-            </div>
-
-            <div>
-                <table>
-                    <tr>
-                        <th colspan="5">Unique Cards</th> <th colspan="5">Total Cards</th> <th colspan="4">Total Value</th>
-                    </tr>
-                    <tr>
-                        <td v-for="type in cardTypes" :style="`background-color: ${type.color};`"><UnmatchedCardIcon :cardType="type.name"/></td>
-                        <td>Total</td>
-
-                        <td v-for="type in cardTypes" :style="`background-color: ${type.color};`"><UnmatchedCardIcon :cardType="type.name"/></td>
-                        <td>Total</td>
-
-                        <template v-for="type in cardTypes">
-                        <td v-if="type.name != 'scheme'" :style="`background-color: ${type.color};`"><UnmatchedCardIcon :cardType="type.name"/></td>
-                        </template>
-                        <td>Total</td>
-                    </tr>
-                    <tr>
-                        <td v-for="type in cardTypes" :style="`background-color: ${type.color};`">{{ uniqueSum[type.name] }}</td>
-                        <td>{{ totalSums.unique }}</td>
-
-                        <td v-for="type in cardTypes" :style="`background-color: ${type.color};`">{{ cardsSum[type.name] }}</td>
-                        <td>{{ totalSums.cards }}</td>
-
-                        <template v-for="type in cardTypes">
-                        <td v-if="type.name != 'scheme'" :style="`background-color: ${type.color};`">{{ cardsValueSum[type.name] }}</td>
-                        </template>
-                        <td>{{ totalSums.cardsValue }}</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="row" style="justify-content: space-evenly;">
-                <template v-for="type in cardTypes">
-                    <div class="col-auto">
-                    <Chart type="bar"
-                        :data="{
-                            labels: chartData.labels[type.name],
-                            datasets: [
-                                {
-                                    data: chartData.boost[type.name],
-                                    borderColor: '#FFFFFFAA',
-                                    stepped: 'middle',
-                                    backgroundColor: 'white',
-                                    label: 'boost',
-                                    type: 'line'
-                                },
-                                {
-                                    data: type.name != 'scheme' ? chartData.values[type.name] : [],
-                                    backgroundColor: type.color,
-                                    label: type.name,
-                                    type: 'bar'
-                                }
-                            ]
-                        }"
-                        :options="{
-                            responsive: false,
-                            scales: {
-                                y: {
-                                    min: 0,
-                                    max: maxCardValue + 1,
-                                    stacked: false
-                                }
-                            }
-                        }"></Chart>
-                    </div>
-                </template>
-            </div>
-
-            <div class="row py-5">
-                <div class="col-12">
-                    <h3 id="deck-definition">Deck definition</h3>
-                    <div class="row">
-                        <div class="col">
-                            <p>
-                              This is the code that defines your deck. You can copy and paste this
-                              code to share or save your deck. You can also edit it live (which is
-                              currently a bit buggy, so use at your own risk!)
-                            </p>
-                            <p>
-                              You can share your deck using this
-                              <a :href="deckLink">link</a>. The link is to a snapshot
-                              of the current state of your deck, so if you change the deck, you'll
-                              need to share a new link. Using this link will disable autosaving, so
-                              whoever you share it with won't accidentally overwrite their own deck.
-                            </p>
-                        </div>
-                        <div class="col">
-                          <BCard no-body>
-                            <BTabs card v-model:index="isJSON" id="firstBTabs">
-                              <BTab title="JSON">
-                                <BFormTextarea
-                                    v-model:model-value="userDeck"
-                                    :state="isValid"
-                                    @input="parseJSONDeck"
-                                    style="width: 100%; height: 250px; font-family: monospace;"
-                                >
-                                </BFormTextarea>
-                              </BTab>
-                            </BTabs>
-                          </BCard>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <hr />
-            <div class="row py-3 justify-content-center">
-                <div class="col-10">
-                    <h5>A Note on the Type</h5>
-                    <p>
-                        The real Unmatched cards are set in
-                        <a href="https://www.typography.com/fonts/knockout/overview" target="_blank">Knockout</a> by Hoefler&Co.
-                        Unmatched Maker uses free alternatives.
-                    </p>
-                    <p>
-                        The headings are set in
-                        <a href="https://www.fontsquirrel.com/fonts/bebas-neue" target="_blank">Bebas Neue Regular</a>
-                        Unfortunately, the free version of Bebas Neue doesn't have lowercase glyphs, so places
-                        that require them use
-                        <a href="https://www.theleagueofmoveabletype.com/league-gothic" target="_blank">League Gothic Regular</a>
-                        instead. Last but not least, the card descriptions are set in
-                        <!--<a href="https://www.fontsquirrel.com/fonts/archivo-narrow" target="_blank">Archivo Narrow Regular</a>
-                            for legibility at small sizes.-->
-                        <a href="https://fonts.google.com/specimen/Roboto+Condensed" target="_blank">Roboto Condensed</a>
-                        for legibility at small sizes.
-                    </p>
-                </div>
-            </div>
+            <Chatter :russian :deckLink />
         </div>
-
-        <div class="print">
-            <UnmatchedCharacterCard
-                :heroName="deck.hero.name"
-                :heroIsRanged="deck.hero.isRanged"
-                :heroHp="deck.hero.hp"
-                :heroMove="deck.hero.move"
-                :heroSpecialAbility="deck.hero.specialAbility"
-                :sidekickName="deck.sidekick.name"
-                :sidekickIsRanged="deck.sidekick.isRanged"
-                :sidekickHp="deck.sidekick.hp"
-                :sidekickQuantity="deck.sidekick.quantity"
-                :sidekickQuote="deck.sidekick.quote"
-                :isEditable="false"
-                class="float-left"
-                :russian
-            />
-            <UnmatchedRulesCard v-for="(ruleCard, id) in deck.ruleCards" class="col-auto" :key="id"
-                  v-model:ruleName="ruleCard.title"
-                  v-model:ruleText="ruleCard.content"
-                  :isEditable="false"
-            />
-            <UnmatchedCard v-for="card in fullDeck"
-                :deckProperties="deck"
-                :cardType="card.data.type"
-                :cardValue="card.data.value"
-                :cardTitle="card.data.title"
-                :characterName="card.data.characterName"
-                :boostValue="card.data.boost"
-                :basicText="card.data.basicText"
-                :immediateText="card.data.immediateText"
-                :duringText="card.data.duringText"
-                :afterText="card.data.afterText"
-                :imageUrl="card.data.imageUrl"
-                :cardQuantity="card.data.quantity"
-                :key="card.id"
-                :isEditable="false"
-                class="float-left"
-                :russian
-            />
-        </div>
+        <Editor :russian @deckUpdate="(v) => {deck = v;}" @linkUpdate="(v) => {deckLink = v;}" />
     </div>
   </BApp>
 </template>
@@ -363,15 +24,11 @@ import SvgBackgroundPicker from '@/components/SvgBackgroundPicker.vue'
 
 import exampleDeck from '@/mixins/exampleDeck.js'
 
-import serializeToHuman from '@/parser/serializer.js'
 import grammar from '@/parser/unmatchedParser.js'
 
-import { Chart, Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
 import UnmatchedCardIcon from './components/UnmatchedCardIcon.vue'
 import Chatter from './components/Chatter.vue'
-
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
+import Editor from './components/editor/Editor.vue'
 
 export default {
     name: 'app',
@@ -382,86 +39,24 @@ export default {
         ZoomBox,
         SvgBackgroundPicker,
         UnmatchedCardIcon,
-        Bar,
         Chatter,
+        Editor,
     },
     mixins: [exampleDeck],
     data: function () {
         return {
-            deck: {
-                name: "",
-                appearance: {
-                    isPNP: false,
-                    borderColour: "#E0EFF0",
-                    highlightColour: "#F07838",
-                    patternName: '',
-                },
-                ruleCards: [
-                ],
-                hero: {
-                    name: "Hero",
-                    isRanged: false,
-                    hp: 15,
-                    move: 2,
-                    specialAbility: "This is the character's special ability."
-                },
-                sidekick: {
-                    name: "Sidekick",
-                    isRanged: true,
-                    hp: 6,
-                    quantity: 1,
-                    quote: "I work best alone"
-                },
-                cards: [],
-            },
-            userDeck: '',
-            humanReadableDeck: '',
+            deck: undefined,
             isValid: true,
             isPrint: false,
-            zoom: 1,
             pattern: 'none',
             isJSON: 0,
-            autoSave: true,
-            cardTypes: [
-                {name: 'attack', color: '#DC3034'},
-                {name: 'defence', color: '#2C76AC'},
-                {name: 'versatile', color: '#6C4E8D'},
-                {name: 'scheme', color: '#FCBD71'},
-            ],
             russian: false,
+            deckLink: "",
         }
     },
     computed: {
-        fullDeck: function() {
-            var fullDeck = [];
-            this.deck.cards.forEach((card, outerIndex) => {
-                var quantity = parseInt(card.quantity) || 1;
-                quantity = quantity > 0 ? quantity : 1;
-                [...Array(quantity)].forEach((_, innerIndex) => {
-                    fullDeck.push({
-                        data: card,
-                        id: `${outerIndex}_${innerIndex}`,
-                        origIndex: outerIndex,
-                    });
-                });
-            });
-            return fullDeck
-        },
-        fullRuleCards: function() {
-            var ruleCards = [];
-            this.deck.ruleCards.forEach((card, outerIndex) => {
-                  ruleCards.push({
-                      data: card,
-                      id: `${outerIndex}`,
-                  });
-            });
-            return ruleCards
-        },
-        remainingCards: function() {
-            const remainingCardCount = this.fullDeck.length < 30 ? 30 - this.fullDeck.length : 0;
-            return [...Array(remainingCardCount)]
-        },
         userColours: function() {
+            if (!this.deck) return undefined;
             return {
                 '--inner-border-colour': this.deck.appearance.isPNP ? this.deck.appearance.borderColour : "#F7EADB",
                 '--outer-border-colour': '#F7EADB',
@@ -470,104 +65,8 @@ export default {
                 '--background-pattern': this.pattern,
             }
         },
-        deckLink: function() {
-          return '/?deck=' + encodeURIComponent(this.humanReadableDeck);
-        },
-        maxCardValue: function() {
-          let maxValue = 0;
-          for (let card of this.deck.cards) maxValue = Math.max(maxValue, card.value);
-          for (let card of this.deck.cards) maxValue = Math.max(maxValue, card.boost);
-          return maxValue;
-        },
-        chartData: function() {
-            let values = {
-                defence: [],
-                attack: [],
-                scheme: [],
-                versatile: [],
-            };
-            let boost = {
-                defence: [],
-                attack: [],
-                scheme: [],
-                versatile: [],
-            };
-            let labels = {
-                defence: [],
-                attack: [],
-                scheme: [],
-                versatile: [],
-            };
-            for (let card of this.fullDeck) {
-                boost[card.data.type].push(card.data.boost);
-                values[card.data.type].push(card.data.value);
-                labels[card.data.type].push(this.capitalize(card.data.title));
-            }
-            return {values, boost, labels};
-        },
-        uniqueSum() {
-            let res = {
-                versatile: 0,
-                attack: 0,
-                defence: 0,
-                scheme: 0,
-            };
-            for (let card of this.deck.cards) {
-                res[card.type]++;
-            }
-            return res;
-        },
-        cardsSum() {
-            let res = {
-                versatile: 0,
-                attack: 0,
-                defence: 0,
-                scheme: 0,
-            };
-            for (let card of this.fullDeck) {
-                res[card.data.type]++;
-            }
-            return res;
-        },
-        cardsValueSum() {
-            let res = {
-                versatile: 0,
-                attack: 0,
-                defence: 0,
-                scheme: 0,
-            };
-            for (let card of this.fullDeck) {
-                res[card.data.type] += card.data.value;
-            }
-            return res;
-        },
-        totalSums() {
-            let unique = 0;
-            for (let val of Object.values(this.uniqueSum)) {
-                unique += val;
-            }
-            let cards = 0;
-            for (let val of Object.values(this.cardsSum)) {
-                cards += val;
-            }
-            let cardsValue = 0;
-            for (let val of Object.values(this.cardsValueSum)) {
-                cardsValue += val;
-            }
-            return {unique, cards, cardsValue};
-        },
     },
     watch: {
-        'deck': {
-            handler: function() {
-                this.userDeck = JSON.stringify(this.deck, null, 2);
-                this.humanReadableDeck = serializeToHuman(this.deck);
-                if (this.autoSave) {
-                  this.localStorageSave();
-                }
-            },
-            deep: true
-        },
         'russian': {
             handler: function() {
                 localStorage.setItem('russian', this.russian);
@@ -575,66 +74,13 @@ export default {
         }
     },
     mounted: function() {
-
         this.$nextTick(() => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const urlDeck = urlParams.get('deck');
-            if (urlDeck) {
-              this.autoSave = false;
-              const humanDeck = decodeURIComponent(urlDeck);
-              // this.parseHumanDeck(humanDeck);
-              return
-            } else if (localStorage.getItem('unmatched-deck')) {
-                const deck = JSON.parse(localStorage.getItem('unmatched-deck'));
-                this.deck.name = deck.name
-                this.deck.appearance = deck.appearance
-                this.deck.hero = deck.hero
-                this.deck.sidekick = deck.sidekick
-                this.deck.ruleCards = deck.ruleCards
-                deck.cards.forEach((card, index) => {
-                    this.deck.cards[index] = card;
-                })
-            }
             if (localStorage.getItem('russian')) {
                 this.russian = localStorage.getItem("russian") === "true";
             }
         });
     },
     methods: {
-        add: function() {
-            this.deck.cards.push(
-                {
-                    title: "Card title",
-                    type: "versatile",
-                    characterName: "Any",
-                    value: 2,
-                    boost: 1,
-                    basicText: "",
-                    immediateText: "",
-                    duringText: "",
-                    afterText: "",
-                    imageUrl: '',
-                    quantity: 1,
-                })
-        },
-        addRulesCard: function() {
-            this.deck.ruleCards.push(
-                {
-                    title: "Extra rule",
-                    content: "This is extra rules card",
-                })
-        },
-        parseJSONDeck: function() {
-            let value = this.userDeck;
-            console.log(value);
-            try {
-                let deck = JSON.parse(value);
-                this.deck = deck;
-                this.isValid = true;
-            } catch {
-                this.isValid = false;
-            }
-        },
 /*        parseHumanDeck: function(value) {
             const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
             this.humanReadableDeck = value;
@@ -667,9 +113,6 @@ export default {
               this.isValid = false;
             }
         },*/
-        localStorageSave: function() {
-            localStorage.setItem('unmatched-deck', JSON.stringify(this.deck));
-        },
         hexToRgb: function(hex) {
           // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
           var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -696,160 +139,9 @@ export default {
             const L = 0.2126*C[0] + 0.7152*C[1] + 0.0722*C[2];
             return (L > 0.179) ? 'black' : 'white'
         },
-        capitalize(str) {
-            return str[0].toUpperCase().concat(str.slice(1).toLowerCase());
-        },
-        serializeToHuman,
     }
 }
 </script>
-
-<style lang="less">
-    @font-face {
-        font-family: BebasNeueRegular;
-        /*src: url("~@/assets/fonts/BebasNeueRegular-vm3oZ.otf");*/
-        src: url("/assets/fonts/bebasneuecyrillic.ttf") format("truetype");
-        font-weight: normal;
-        font-style: normal;
-    }
-
-    @font-face {
-        font-family: League Gothic;
-        src: url("/assets/fonts/LeagueGothic-Regular.otf");
-        font-weight: normal;
-        font-style: normal;
-    }
-
-    @font-face {
-        font-family: Archivo Narrow;
-        src: url("/assets/fonts/RobotoCondensed-Regular.ttf");
-        font-weight: normal;
-        font-style: normal;
-    }
-
-    @font-face {
-        font-family: Archivo Narrow;
-        src: url("/assets/fonts/RobotoCondensed-Bold.ttf");
-        font-weight: bold;
-        font-style: normal;
-    }
-
-    @font-face {
-        font-family: Archivo Narrow;
-        src: url("/assets/fonts/RobotoCondensed-Italic.ttf");
-        font-weight: normal;
-        font-style: italic;
-    }
-
-    @font-face {
-        font-family: Archivo Narrow;
-        src: url("/assets/fonts/RobotoCondensed-BoldItalic.ttf");
-        font-weight: bold;
-        font-style: italic;
-    }
-
-    * {
-        box-sizing: border-box;
-    }
-
-    @page {
-        size: landscape;
-    }
-    
-    /* 
-    body {
-        background-color: #111;
-        color: #eee;
-    }*/
-
-
-    .printnplay {
-        .unmatched-card {
-            border-radius: 0;
-            background: var(--inner-border-colour);
-        }
-    }
-
-    .print {
-        position: absolute;
-        opacity: 0;
-        top: 0;
-        left: 0;
-        z-index: -9999;
-    }
-
-    @media print {
-        * {
-            -webkit-transition: none !important;
-            transition: none !important;
-        }
-
-        body {
-          background-color: white;
-        }
-
-        .no-print {
-            display: none !important;
-        }
-
-        .print {
-            opacity: 1;
-            display: block !important;
-
-            .unmatched-card {
-                float: left;
-                margin: 0;
-                page-break-inside: avoid;
-            }
-        }
-    }
-
-    .unmatched-card {
-        line-height: normal;
-        // float: left;
-        // margin: 50px;
-    }
-
-    .unmatched-card {
-        width: 63mm;
-        height: 88mm;
-        background: var(--outer-border-colour);
-        padding: 3mm;
-        // border: 1px solid rgba(0,0,0,.125);
-
-        border-radius: 2.5mm;
-        &.blank {
-            background: #333;
-            color: #111;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-align: center;
-            user-select: none;
-
-            font-size: 32mm;
-        }
-    }
-
-    .unmatched-card, .unmatched-card * {
-        font-weight: normal;
-        font-family: BebasNeueRegular, sans-serif;
-        color-adjust: exact;
-    }
-
-    .appearance .card {
-        cursor: pointer;
-    }
-
-    .border-danger {
-        border-width: 1mm;
-    }
-
-    .deck-properties {
-      min-width: 600px;
-    }
-</style>
 
 <!--<style land="scss"> 
     $body-bg: #000;

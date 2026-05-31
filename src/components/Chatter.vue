@@ -99,7 +99,7 @@
                 </div>
                 <div class="col">
                     <BCard no-body>
-                    <BTabs card v-model:index="isJSON" id="secondBTabs">
+                    <BTabs card id="secondBTabs">
                         <BTab title="JSON">
                         <BFormTextarea
                             readonly
@@ -239,7 +239,7 @@
                 </div>
                 <div class="col">
                     <BCard no-body>
-                    <BTabs card v-model:index="isJSON" id="secondBTabs">
+                    <BTabs card id="secondBTabs">
                         <BTab title="JSON">
                         <BFormTextarea
                             readonly
@@ -289,6 +289,6 @@ export default defineComponent({
     name: "Chatter",
     components: {},
     mixins: [exampleDeck],
-    props: ['russian']
+    props: ['russian', 'deckLink']
 });
 </script>
